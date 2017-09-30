@@ -2,16 +2,15 @@
 PingMesh as a sample application for [NetTester](https://github.com/net-tester/net-tester)
 
 ## Install
-Bundle install
+npm install
 ```shell
-bundle install --binstubs --path=vendor/bundle
+npm install
 ```
 
 ## Usage
 * Run web server.
-  * REST API (Web server) is now **DUMMY**.
 ```shell
-bundle exec rackup
+npm start
 ```
 * Access index.html (default: `http://localhost:9292/`)
 

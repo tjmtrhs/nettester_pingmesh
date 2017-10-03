@@ -23,19 +23,60 @@ function generateErrorTitleString(d) {
     return generateTitleString(d) + " (ERROR)";
 }
 
+function hsv2rgb(hue, saturation, value) {
+    // hue: 0 ~ 360
+    // saturation, value: 0 ~ 100
+    var r = 0;
+    var g = 0;
+    var b = 0;
+
+    var max = value * 255 / 100;
+    var min = max - ((saturation / 100) * max);
+
+    if (hue < 60) {
+        r = max;
+        g = (hue / 60) * (max - min) + min;
+        b = min;
+    }
+    else if (hue < 120) {
+        r = ((120 - hue) / 60) * (max - min) + min;
+        g = max;
+        b = min;
+    }
+    else if (hue < 180) {
+        r = min;
+        g = max;
+        b = ((hue - 120) / 60) * (max - min) + min;
+    }
+    else if (hue < 240) {
+        r = min;
+        g = ((240 - hue) / 60) * (max - min) + min;
+        b = max;
+    }
+    else if (hue < 300) {
+        r = ((hue - 240) / 60) * (max - min) + min;
+        g = min;
+        b = max;
+    }
+    else {
+        r = max;
+        g = min;
+        b = ((360 - hue) / 60) * (max - min) + min;
+    }
+
+    return "rgb(" + Math.round(r) + "," + Math.round(g) + "," + Math.round(b) + ")";
+}
+
 function setColor(d) {
     if(d.dst.id === d.src.id) {
         return "white";
     } else if (d.rtt.avg < 0){
         return "black";
     } else {
-        var rttScale = d3.scaleLinear()
-            .domain([0, 100]) // input range : ping rtt ms
-            .range([0, 1]);
-        // change msec to sec
-        // invert [0,1] -> [-1,0] and shift(+1)
-        // because RdYlGn maps <0:Red / 0.5:Yellow / 1:Green>
-        return d3.interpolateRdYlGn( 1 - rttScale(d.rtt.avg) );
+        return hsv2rgb(
+            d3.scaleLinear().domain([0, 100]).range([120, 0])(d.rtt.avg),
+            70,
+            d3.scaleLinear().domain([0, 1]).range([20, 80])(d.rtt.success_rate));
     }
 }
 

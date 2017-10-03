@@ -4,6 +4,7 @@ console.log("start script");
 ///////////////////
 // functions
 ///////////////////
+var scanInterval = 2000;
 
 function generateIdString(src, dst) {
     return src.host + "_to_" + dst.host;
@@ -185,7 +186,7 @@ function updateGrid(url, svg, targetItem) {
 
           // update each rectangle by interval
           var t = d3.interval(function(elapsed) {
-              var targetIndex = Math.floor(elapsed / 1000) % host_comb.length;
+              var targetIndex = Math.floor(elapsed / scanInterval) % host_comb.length;
               var targetItem = host_comb[targetIndex];
 
               if (targetItem.src.id !== targetItem.dst.id) {
@@ -195,7 +196,7 @@ function updateGrid(url, svg, targetItem) {
 
               // debug
               // if (elapsed > host_comb.length * 1000) t.stop();
-          }, 1000); // delay 1sec
+          }, scanInterval);
 
         })
         .get();
